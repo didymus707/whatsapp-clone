@@ -1,7 +1,9 @@
+import axios from "axios";
+import React from "react";
+import Image from "next/image";
+import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import Image from "next/image";
-import React from "react";
 import { FcGoogle } from "react-icons/fc";
 
 function login() {
@@ -11,9 +13,12 @@ function login() {
       user: { displayName: name, email, photoURL: proileImage },
     } = await signInWithPopup(firebaseAuth, provider);
     try {
-      
+      if (email) {
+        const { data } = await axios.post(CHECK_USER_ROUTE, { email });
+        console.log({ data });
+      }
     } catch (error) {
-      
+      console.log(error);
     }
   };
   return (
