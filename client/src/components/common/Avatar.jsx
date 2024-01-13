@@ -4,6 +4,7 @@ import { FcCompactCamera } from "react-icons/fc";
 import ContextMenu from "./ContextMenu";
 import PhotoPicker from "./PhotoPicker";
 import PhotoLibrary from "./PhotoLibrary";
+import CapturePhoto from "./CapturePhoto";
 
 function Avatar({ type, image, setImage }) {
   const [hover, setHover] = useState(false);
@@ -14,6 +15,7 @@ function Avatar({ type, image, setImage }) {
   });
   const [grabPhoto, setGrabPhoto] = useState(false);
   const [showPhotoLibrary, setShowPhotoLibrary] = useState(false);
+  const [showCapturePhoto, setShowCapturePhoto] = useState(false);
 
   const showContextMenu = (e) => {
     e.preventDefault();
@@ -22,7 +24,12 @@ function Avatar({ type, image, setImage }) {
   };
 
   const contextMenuOptions = [
-    { name: "Take Photo", callback: () => {} },
+    {
+      name: "Take Photo",
+      callback: () => {
+        setShowCapturePhoto(true);
+      },
+    },
     {
       name: "Choose from library",
       callback: () => {
@@ -44,6 +51,7 @@ function Avatar({ type, image, setImage }) {
   ];
 
   const photoPickerChange = async (e) => {
+    console.log(e.target);
     const file = e.target.files[0];
     const reader = new FileReader();
     const data = document.createElement("img");
@@ -118,6 +126,9 @@ function Avatar({ type, image, setImage }) {
           contextMenu={isContextMenuVisible}
           setContextMenu={setIsContextMenuVisible}
         />
+      )}
+      {showCapturePhoto && (
+        <CapturePhoto setImage={setImage} hide={setShowCapturePhoto} />
       )}
       {showPhotoLibrary && (
         <PhotoLibrary

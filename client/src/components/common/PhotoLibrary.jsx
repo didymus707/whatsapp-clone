@@ -15,7 +15,7 @@ function PhotoLibrary({ setPhoto, hidePhotoLibrary }) {
   ];
   return (
     <div className="fixed top-0 left-0 max-h-[100vh] max-w-[100vw] h-full w-full flex justify-center items-center">
-      <div className="h-max w-max bg-gray-900 gap-6 rounded-lg p-4">
+      <div className="h-max w-max bg-gray-900 gap-6 rounded-lg p-4 relative">
         <div
           className="pt-2 pr-2 cursor-pointer flex items-end justify-end"
           onClick={() => hidePhotoLibrary(false)}
