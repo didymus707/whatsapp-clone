@@ -29,6 +29,19 @@ function login() {
             userInfo: { name, email, profileImage, status: "" },
           });
           router.push("/onboarding");
+        } else {
+          const {
+            id,
+            name,
+            email,
+            profilePicture: profileImage,
+            status,
+          } = data;
+          dispatch({
+            type: reducerCases.SET_USER_INFO,
+            userInfo: { id, name, email, profileImage, status },
+          });
+          router.push("/");
         }
       }
     } catch (error) {
@@ -38,7 +51,13 @@ function login() {
   return (
     <div className="flex justify-center items-center bg-panel-header-background h-screen w-screen flex-col gap-6">
       <div className="flex items-center justify-center gap-2 text-white">
-        <Image src="/whatsapp.gif" alt="whatsapp" height={300} width={300} priority />
+        <Image
+          src="/whatsapp.gif"
+          alt="whatsapp"
+          height={300}
+          width={300}
+          priority
+        />
         <span className="text-7xl">Whatsapp</span>
       </div>
       <button
