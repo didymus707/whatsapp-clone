@@ -1,11 +1,12 @@
-import Avatar from "@/components/common/Avatar";
-import Input from "@/components/common/Input";
-import { useStateProvider } from "@/context/StateContext";
-import { ONBOARD_USER_ROUTE } from "@/utils/ApiRoutes";
 import axios from "axios";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import Input from "@/components/common/Input";
+import Avatar from "@/components/common/Avatar";
 import React, { useEffect, useState } from "react";
+import { reducerCases } from "@/context/constants";
+import { ONBOARD_USER_ROUTE } from "@/utils/ApiRoutes";
+import { useStateProvider } from "@/context/StateContext";
 
 function onboarding() {
   const router = useRouter();
@@ -15,12 +16,9 @@ function onboarding() {
   const [image, setImage] = useState("/default_avatar.png");
 
   useEffect(() => {
+    console.log({ newUser, userInfo });
     if (!newUser && !userInfo?.email) router.push("/login");
     else if (!newUser && userInfo?.email) router.push("/");
-
-    return () => {
-      second;
-    };
   }, [newUser, userInfo, router]);
 
   const onboardUser = async () => {
@@ -37,7 +35,13 @@ function onboarding() {
           dispatch({ type: reducerCases.SET_NEW_USER, newUser: false });
           dispatch({
             type: reducerCases.SET_USER_INFO,
-            userInfo: { name, email, profileImage: image, status: about },
+            userInfo: {
+              id: data.id,
+              name,
+              email,
+              profileImage: image,
+              status: about,
+            },
           });
           router.push("/");
         }

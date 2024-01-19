@@ -1,5 +1,5 @@
 import axios from "axios";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { FcGoogle } from "react-icons/fc";
@@ -11,8 +11,12 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 function login() {
   const router = useRouter();
+  const [{ userInfo, newUser }, dispatch] = useStateProvider();
 
-  const [{}, dispatch] = useStateProvider();
+  useEffect(() => {
+    if (userInfo?.id && !newUser) router.push("/");
+  }, [userInfo, newUser]);
+
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider();
     const {
@@ -48,6 +52,7 @@ function login() {
       console.log(error);
     }
   };
+
   return (
     <div className="flex justify-center items-center bg-panel-header-background h-screen w-screen flex-col gap-6">
       <div className="flex items-center justify-center gap-2 text-white">
