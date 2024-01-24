@@ -23,16 +23,20 @@ function Main() {
   onAuthStateChanged(firebaseAuth, async (currentUser) => {
     if (!currentUser) setRedirectLogin(true);
     if (!userInfo && currentUser?.email) {
-      const {
-        data: { data },
-      } = await axios.post(CHECK_USER_ROUTE, {
+      const { data } = await axios.post(CHECK_USER_ROUTE, {
         email: currentUser.email,
       });
       if (!data.status) {
         router.push("/login");
       }
       console.log({ data: data });
-      const { id, name, email, profilePicture: profileImage, status } = data;
+      const {
+        id,
+        name,
+        email,
+        profilePicture: profileImage,
+        status,
+      } = data.data;
       dispatch({
         type: reducerCases.SET_USER_INFO,
         userInfo: { id, name, email, profileImage, status },
