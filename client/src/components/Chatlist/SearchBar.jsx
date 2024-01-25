@@ -9,7 +9,7 @@ function SearchBar() {
         <div>
           <BiSearchAlt2 className="text-panel-header-icon cursor-pointer text-lg" />
         </div>
-        <div>
+        <div className="w-full">
           <input
             type="text"
             placeholder="search or start a new chat"
