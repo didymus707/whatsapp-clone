@@ -1,10 +1,15 @@
 import React from "react";
 import Avatar from "../common/Avatar";
+import { useStateProvider } from "@/context/StateContext";
 
 function ChatLIstItem({ data, isContactPage = false }) {
+  const [{userInfo, currentChatUser}] = useStateProvider();
+  const handleContactClick = () => {}
+
   return (
     <div
       className={`flex cursor-pointer items-center hover:bg-background-default-hover`}
+      onClick={handleContactClick}
     >
       <div className="px-5 min-w-fit pt-3 pb-1">
         <Avatar type="lg" image={data?.profilePicture} />
