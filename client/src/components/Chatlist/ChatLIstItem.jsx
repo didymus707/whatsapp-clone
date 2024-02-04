@@ -1,10 +1,16 @@
 import React from "react";
 import Avatar from "../common/Avatar";
 import { useStateProvider } from "@/context/StateContext";
+import { reducerCases } from "@/context/constants";
 
 function ChatLIstItem({ data, isContactPage = false }) {
-  const [{userInfo, currentChatUser}] = useStateProvider();
-  const handleContactClick = () => {}
+  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+  const handleContactClick = () => {
+    if (currentChatUser) {
+      dispatch({ type: reducerCases.CHANGE_CURRENT_CHAT_USER, user: { data } });
+      dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
+    }
+  };
 
   return (
     <div
