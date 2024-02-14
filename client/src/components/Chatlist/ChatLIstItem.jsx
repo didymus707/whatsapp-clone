@@ -6,10 +6,11 @@ import { reducerCases } from "@/context/constants";
 function ChatLIstItem({ data, isContactPage = false }) {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
   const handleContactClick = () => {
-    if (currentChatUser) {
-      dispatch({ type: reducerCases.CHANGE_CURRENT_CHAT_USER, user: { data } });
-      dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
-    }
+    dispatch({
+      type: reducerCases.CHANGE_CURRENT_CHAT_USER,
+      user: { ...data },
+    });
+    dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
   };
 
   return (

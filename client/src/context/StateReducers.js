@@ -25,9 +25,10 @@ const reducer = (state, action) => {
         contactsPage: !state.contactsPage,
       };
     case reducerCases.CHANGE_CURRENT_CHAT_USER:
+      console.log(action);
       return {
         ...state,
-        contactsPage: action.user,
+        currentChatUser: action.user,
       };
     default:
       return state;

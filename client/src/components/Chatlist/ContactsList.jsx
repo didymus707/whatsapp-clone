@@ -53,7 +53,6 @@ function ContactsList() {
           </div>
         </div>
         {Object.entries(allContacts).map(([initialLetter, userList]) => {
-          console.log({ userList });
           return (
             <div key={Date.now() + initialLetter}>
               <div className="text-teal-light pl-10 py-5">{initialLetter}</div>
