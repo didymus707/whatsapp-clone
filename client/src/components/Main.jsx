@@ -13,9 +13,8 @@ import Chat from "./Chat/Chat";
 
 function Main() {
   const router = useRouter();
-  const [{ userInfo, currentUser }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
   const [redirectLogin, setRedirectLogin] = useState(false);
-  console.log("currentUser", currentUser);
 
   useEffect(() => {
     if (redirectLogin) router.push("/login");
@@ -49,8 +48,7 @@ function Main() {
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
         <ChatList />
-        <Chat />
-        {/* {currentUser ? <Chat /> : <Empty />} */}
+        {currentChatUser ? <Chat /> : <Empty />}
       </div>
     </>
   );
