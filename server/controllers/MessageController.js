@@ -1,4 +1,4 @@
-import getPrismaInstance from "../utils/PrismaClient";
+import getPrismaInstance from "../utils/PrismaClient.js";
 
 export const addMessage = async (req, res, next) => {
   try {

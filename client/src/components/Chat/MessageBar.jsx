@@ -1,15 +1,26 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { BsEmojiSmile } from "react-icons/bs";
 import { ImAttachment } from "react-icons/im";
 import { MdSend } from "react-icons/md";
 import { FaMicrophone } from "react-icons/fa";
 import { useStateProvider } from "@/context/StateContext";
+import { ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 
 function MessageBar() {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
   const [message, setMessage] = useState("");
   const sendMessage = async () => {
-    alert(message);
+    try {
+      const data = await axios.post(ADD_MESSAGE_ROUTE, {
+        to: currentChatUser?.id,
+        from: userInfo?.id,
+        message,
+      });
+      setMessage("");
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="bg-panel-header-background relative h-20 px-4 flex items-center gap-6">
