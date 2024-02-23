@@ -17,6 +17,7 @@ function MessageBar() {
         from: userInfo?.id,
         message,
       });
+      console.log(data);
       setMessage("");
     } catch (error) {
       console.log(error);
@@ -49,7 +50,9 @@ function MessageBar() {
             <MdSend
               title="send message"
               onClick={sendMessage}
-              className="text-panel-header-icon cursor-pointer text-xl"
+              className={`text-panel-header-icon text-xl ${
+                message ? "cursor-pointer" : "pointer-events-none"
+              }`}
             />
             {/* <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl" /> */}
           </button>

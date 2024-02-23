@@ -6,7 +6,7 @@ import ChatList from "./Chatlist/ChatList";
 import { onAuthStateChanged } from "firebase/auth";
 import React, { useEffect, useState } from "react";
 import { reducerCases } from "@/context/constants";
-import { CHECK_USER_ROUTE } from "@/utils/ApiRoutes";
+import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { useStateProvider } from "@/context/StateContext";
 import Chat from "./Chat/Chat";
@@ -29,7 +29,6 @@ function Main() {
       if (!data.status) {
         router.push("/login");
       }
-      console.log({ data: data });
       const {
         id,
         name,
@@ -43,6 +42,18 @@ function Main() {
       });
     }
   });
+
+  useEffect(() => {
+    const getMessages = async () => {
+      const { data } = await axios.get(
+        `${GET_MESSAGES_ROUTE}/${userInfo.id}/${currentChatUser.id}`
+      );
+      console.log({ data });
+    };
+    if (currentChatUser?.id) {
+      getMessages();
+    }
+  }, [currentChatUser]);
 
   return (
     <>
