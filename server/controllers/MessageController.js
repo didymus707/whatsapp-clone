@@ -43,12 +43,14 @@ export const getMessages = async (req, res, next) => {
       orderBy: { id: "asc" },
     });
     const unreadMessages = [];
+
     messages.forEach((message, index) => {
       if (
         message.messageStatus !== "read" &&
         message.senderId === parseInt(to)
       ) {
-        message[index].messageStatus = "read";
+        console.log("message bug", { message, index });
+        message.messageStatus = "read";
         unreadMessages.push(message.id);
       }
     });
