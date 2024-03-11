@@ -11,8 +11,7 @@ function ChatLIstItem({ data, isContactPage = false }) {
       user: { ...data },
     });
     dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
-  };
-  console.log("currentChatUser", { currentChatUser });
+  };   
 
   return (
     <div
