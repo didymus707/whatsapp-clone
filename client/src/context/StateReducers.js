@@ -1,11 +1,12 @@
 import { reducerCases } from "./constants";
 
 export const initiaalState = {
-  userInfo: undefined,
+  messages: [],
   newUSer: false,
+  socket: undefined,
+  userInfo: undefined,
   contactsPage: false,
   currentChatUser: undefined,
-  messages: []
 };
 
 const reducer = (state, action) => {
@@ -34,6 +35,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         messages: action.messages,
+      };
+    case reducerCases.SET_SOCKET:
+      return {
+        ...state,
+        socket: action.socket,
+      };
+    case reducerCases.ADD_MESSAGE:
+      return {
+        ...state,
+        messages: [...state.messages, action.newMessage],
       };
     default:
       return state;
