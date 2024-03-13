@@ -49,7 +49,6 @@ export const getMessages = async (req, res, next) => {
         message.messageStatus !== "read" &&
         message.senderId === parseInt(to)
       ) {
-        console.log("message bug", { message, index });
         message.messageStatus = "read";
         unreadMessages.push(message.id);
       }

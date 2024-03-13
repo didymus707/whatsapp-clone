@@ -17,7 +17,7 @@ function MessageBar() {
         from: userInfo?.id,
         message,
       });
-      console.log(data);
+      console.log(data.message);
       socket.current.emit("send-msg", {
         to: currentChatUser?.id,
         from: userInfo?.id,
@@ -28,6 +28,7 @@ function MessageBar() {
       console.log(error);
     }
   };
+  
   return (
     <div className="bg-panel-header-background relative h-20 px-4 flex items-center gap-6">
       <>

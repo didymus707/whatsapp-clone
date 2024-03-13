@@ -23,17 +23,28 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
   },
 });
- 
+
 global.onlineUsers = new Map();
+
 io.on("connection", (socket) => {
+  console.log("a user is connected");
+  // const connectedUsers = Object.keys(io.engine.clientsCount).length;
+  const connectedUsers = io.engine.clientsCount;
+  console.log(`number of connected users: ${connectedUsers}`);
+
   global.chatSocket = socket;
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
   });
+
   socket.on("send-msg", (data) => {
+    const connectedUsers = Object.keys(io.sockets.sockets).length;
+    console.log(`number of connected users: ${connectedUsers}`);
+
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-      socket.to("sendUserSocket").emit("msg-receive", {
+      console.log("message:", data.message);
+      socket.to(sendUserSocket).emit("msg-receive", {
         from: data.from,
         message: data.message,
       });
