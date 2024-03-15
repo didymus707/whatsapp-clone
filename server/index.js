@@ -27,22 +27,14 @@ const io = new Server(server, {
 global.onlineUsers = new Map();
 
 io.on("connection", (socket) => {
-  console.log("a user is connected");
-  const connectedUsers = io.engine.clientsCount;
-  console.log(`number of connected users in connection instance: ${connectedUsers}`);
-
   global.chatSocket = socket;
   socket.on("add-user", (userId) => {
-    console.log({ onlineUsersObject: onlineUsers });
     onlineUsers.set(userId, socket.id);
   });
 
   socket.on("send-msg", (data) => {
-    console.log(`number of connected users in send-msg instance: ${connectedUsers}`);
-
     const sendUserSocket = onlineUsers.get(data.to);
     if (sendUserSocket) {
-      console.log("message:", data.message);
       socket.to(sendUserSocket).emit("msg-receive", {
         from: data.from,
         message: data.message,

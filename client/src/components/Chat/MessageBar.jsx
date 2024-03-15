@@ -6,6 +6,7 @@ import { MdSend } from "react-icons/md";
 import { FaMicrophone } from "react-icons/fa";
 import { useStateProvider } from "@/context/StateContext";
 import { ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
+import { reducerCases } from "@/context/constants";
 
 function MessageBar() {
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
@@ -17,18 +18,23 @@ function MessageBar() {
         from: userInfo?.id,
         message,
       });
-      console.log(data.message);
+      // console.log('what again', data)
       socket.current.emit("send-msg", {
         to: currentChatUser?.id,
         from: userInfo?.id,
         message: data.message,
+      });
+      dispatch({
+        type: reducerCases.ADD_MESSAGE,
+        newMessage: { ...data.message },
+        fromSelf: true,
       });
       setMessage("");
     } catch (error) {
       console.log(error);
     }
   };
-  
+
   return (
     <div className="bg-panel-header-background relative h-20 px-4 flex items-center gap-6">
       <>
