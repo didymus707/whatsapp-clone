@@ -10,24 +10,34 @@ import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
 
 function MessageBar() {
-  const [message, setMessage] = useState("");
   const emojiPickerRef = useRef(null);
+  const [message, setMessage] = useState("");
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
+  console.log(showEmojiPicker);
 
   useEffect(() => {
     const closeEmojiModal = (event) => {
-      if (event.target.id !== "emoji-open") {
+      if (event.target.id !== "emoji-opener") {
+        console.log("event.target.id", event.target.id);
         if (
           emojiPickerRef.current &&
           !emojiPickerRef.current.contains(event.target)
         ) {
+          console.log("emojiPickerRef.current", emojiPickerRef.current);
+          console.log(
+            "emojiPickerRef.current.contains(event.target)",
+            emojiPickerRef.current.contains(event.target)
+          );
           setShowEmojiPicker(false);
         }
       }
     };
 
-    closeEmojiModal()
+    document.addEventListener("click", closeEmojiModal);
+    return () => {
+      document.removeEventListener("click", closeEmojiModal);
+    };
   }, []);
 
   const handleEmojiModal = () => {
@@ -73,8 +83,8 @@ function MessageBar() {
           />
           {showEmojiPicker && (
             <div
-              className="absolute bottom-24 left-16 z-40"
               ref={emojiPickerRef}
+              className="absolute bottom-24 left-16 z-40"
             >
               <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
             </div>
