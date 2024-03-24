@@ -8,31 +8,16 @@ import { useStateProvider } from "@/context/StateContext";
 import { ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
+import PhotoPicker from "../common/PhotoPicker";
 
 function MessageBar() {
   const emojiPickerRef = useRef(null);
   const [message, setMessage] = useState("");
+  const [grabPhoto, setGrabPhoto] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
-  console.log(showEmojiPicker);
 
-  useEffect(() => {
-    const closeEmojiModal = (event) => {
-      if (event.target.id !== "emoji-opener") {
-        if (
-          emojiPickerRef.current &&
-          !emojiPickerRef.current.contains(event.target)
-        ) {
-          setShowEmojiPicker(false);
-        }
-      }
-    };
-
-    document.addEventListener("click", closeEmojiModal);
-    return () => {
-      document.removeEventListener("click", closeEmojiModal);
-    };
-  }, []);
+  const photoPickerChange = async (e) => {};
 
   const handleEmojiModal = () => {
     setShowEmojiPicker(!showEmojiPicker);
@@ -65,6 +50,36 @@ function MessageBar() {
     }
   };
 
+  useEffect(() => {
+    const closeEmojiModal = (event) => {
+      if (event.target.id !== "emoji-opener") {
+        if (
+          emojiPickerRef.current &&
+          !emojiPickerRef.current.contains(event.target)
+        ) {
+          setShowEmojiPicker(false);
+        }
+      }
+    };
+
+    document.addEventListener("click", closeEmojiModal);
+    return () => {
+      document.removeEventListener("click", closeEmojiModal);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (grabPhoto) {
+      const data = document.getElementById("photo-picker");
+      data.click();
+      document.body.onfocus = (e) => {
+        setTimeout(() => {
+          setGrabPhoto(false);
+        }, 1000);
+      };
+    }
+  }, [grabPhoto]);
+
   return (
     <div className="bg-panel-header-background relative h-20 px-4 flex items-center gap-6">
       <>
@@ -85,6 +100,7 @@ function MessageBar() {
           )}
           <ImAttachment
             title="Attach File"
+            onClick={() => setGrabPhoto(true)}
             className="text-panel-header-icon cursor-pointer text-xl"
           />
         </div>
@@ -110,6 +126,7 @@ function MessageBar() {
           </button>
         </div>
       </>
+      {grabPhoto && <PhotoPicker onChange={photoPickerChange} />}
     </div>
   );
 }
