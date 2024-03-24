@@ -19,16 +19,10 @@ function MessageBar() {
   useEffect(() => {
     const closeEmojiModal = (event) => {
       if (event.target.id !== "emoji-opener") {
-        console.log("event.target.id", event.target.id);
         if (
           emojiPickerRef.current &&
           !emojiPickerRef.current.contains(event.target)
         ) {
-          console.log("emojiPickerRef.current", emojiPickerRef.current);
-          console.log(
-            "emojiPickerRef.current.contains(event.target)",
-            emojiPickerRef.current.contains(event.target)
-          );
           setShowEmojiPicker(false);
         }
       }
