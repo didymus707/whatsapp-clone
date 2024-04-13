@@ -55,7 +55,7 @@ function Main() {
 
   useEffect(() => {
     if (socket.current && !socketEvent) {
-      socket.current.on("msg-receive", (data) => {
+      socket.current.on("receiveMsg", (data) => {
         dispatch({
           type: reducerCases.ADD_MESSAGE,
           newMessage: { ...data.message },

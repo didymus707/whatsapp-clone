@@ -32,7 +32,7 @@ function MessageBar() {
         },
       });
       if (response.status === 201) {
-        socket.current.emit("send-msg", {
+        socket.current.emit("sendMsg", {
           to: currentChatUser?.id,
           from: userInfo?.id,
           message: response.data.message,
@@ -63,7 +63,7 @@ function MessageBar() {
         from: userInfo?.id,
         message,
       });
-      socket.current.emit("send-msg", {
+      socket.current.emit("sendMsg", {
         to: currentChatUser?.id,
         from: userInfo?.id,
         message: data.message,

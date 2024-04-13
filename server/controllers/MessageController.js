@@ -1,4 +1,5 @@
 import getPrismaInstance from "../utils/PrismaClient.js";
+import fs from "fs";
 
 export const addMessage = async (req, res, next) => {
   try {
@@ -71,9 +72,9 @@ export const addImageMessage = async (req, res, next) => {
   try {
     if (req.file) {
       const date = Date.now();
-      let fileName = "uploads/image" + date + req.file.originalName;
-      renameSync(req.file.path, fileName);
-      const prisma = getPrismaInstance;
+      let fileName = "uploads/images/" + date + req.file.originalname;
+      fs.renameSync(req.file.path, fileName);
+      const prisma = getPrismaInstance();
       const { from, to } = req.query;
       if (from && to) {
         const message = await prisma.messages.create({
