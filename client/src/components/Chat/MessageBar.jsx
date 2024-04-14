@@ -9,12 +9,14 @@ import { ADD_IMAGE_ROUTE, ADD_MESSAGE_ROUTE } from "@/utils/ApiRoutes";
 import { reducerCases } from "@/context/constants";
 import EmojiPicker from "emoji-picker-react";
 import PhotoPicker from "../common/PhotoPicker";
+import CaptureAudio from "../common/CaptureAudio";
 
 function MessageBar() {
   const emojiPickerRef = useRef(null);
   const [message, setMessage] = useState("");
   const [grabPhoto, setGrabPhoto] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [showAudioRecorder, setShowAudioRecorder] = useState(false);
   const [{ userInfo, currentChatUser, socket }, dispatch] = useStateProvider();
 
   const photoPickerChange = async (e) => {
@@ -111,51 +113,60 @@ function MessageBar() {
 
   return (
     <div className="bg-panel-header-background relative h-20 px-4 flex items-center gap-6">
-      <>
-        <div className="flex gap-6">
-          <BsEmojiSmile
-            title="Emoji"
-            id="emoji-opener"
-            onClick={handleEmojiModal}
-            className="text-panel-header-icon cursor-pointer text-xl"
-          />
-          {showEmojiPicker && (
-            <div
-              ref={emojiPickerRef}
-              className="absolute bottom-24 left-16 z-40"
-            >
-              <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
-            </div>
-          )}
-          <ImAttachment
-            title="Attach File"
-            onClick={() => setGrabPhoto(true)}
-            className="text-panel-header-icon cursor-pointer text-xl"
-          />
-        </div>
-        <div className="w-full rounded-lg h-10 flex items-center">
-          <input
-            type="text"
-            value={message}
-            placeholder="Type a message"
-            onChange={(e) => setMessage(e.target.value)}
-            className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
-          />
-        </div>
-        <div className="flex w-10 items-center justify-center">
-          <button>
-            <MdSend
-              title="send message"
-              onClick={sendMessage}
-              className={`text-panel-header-icon text-xl ${
-                message ? "cursor-pointer" : "pointer-events-none"
-              }`}
+      {!showAudioRecorder && (
+        <>
+          <div className="flex gap-6">
+            <BsEmojiSmile
+              title="Emoji"
+              id="emoji-opener"
+              onClick={handleEmojiModal}
+              className="text-panel-header-icon cursor-pointer text-xl"
             />
-            {/* <FaMicrophone className="text-panel-header-icon cursor-pointer text-xl" /> */}
-          </button>
-        </div>
-      </>
+            {showEmojiPicker && (
+              <div
+                ref={emojiPickerRef}
+                className="absolute bottom-24 left-16 z-40"
+              >
+                <EmojiPicker onEmojiClick={handleEmojiClick} theme="dark" />
+              </div>
+            )}
+            <ImAttachment
+              title="Attach File"
+              onClick={() => setGrabPhoto(true)}
+              className="text-panel-header-icon cursor-pointer text-xl"
+            />
+          </div>
+          <div className="w-full rounded-lg h-10 flex items-center">
+            <input
+              type="text"
+              value={message}
+              placeholder="Type a message"
+              onChange={(e) => setMessage(e.target.value)}
+              className="bg-input-background text-sm focus:outline-none text-white h-10 rounded-lg px-5 py-4 w-full"
+            />
+          </div>
+          <div className="flex w-10 items-center justify-center">
+            <button>
+              {message.length ? (
+                <MdSend
+                  title="send message"
+                  onClick={sendMessage}
+                  className={`text-panel-header-icon text-xl ${
+                    message ? "cursor-pointer" : "pointer-events-none"
+                  }`}
+                />
+              ) : (
+                <FaMicrophone
+                  className="text-panel-header-icon cursor-pointer text-xl"
+                  onClick={() => setShowAudioRecorder(true)}
+                />
+              )}
+            </button>
+          </div>
+        </>
+      )}
       {grabPhoto && <PhotoPicker onChange={photoPickerChange} />}
+      {showAudioRecorder && <CaptureAudio hide={setShowAudioRecorder} />}
     </div>
   );
 }
