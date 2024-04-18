@@ -1,7 +1,13 @@
 import { MdSend } from "react-icons/md";
 import React, { useEffect, useRef, useState } from "react";
 import { useStateProvider } from "@/context/StateContext";
-import { FaMicrophone, FaPauseCircle, FaTrash } from "react-icons/fa";
+import {
+  FaPlay,
+  FaStop,
+  FaTrash,
+  FaMicrophone,
+  FaPauseCircle,
+} from "react-icons/fa";
 import WaveSurfer from "wavesurfer.js";
 
 function CaptureAudio({ hide }) {
@@ -107,13 +113,17 @@ function CaptureAudio({ hide }) {
   };
 
   useEffect(() => {
-    first
-  
-    return () => {
-      second
+    if (recordedAudio) {
+      const updatePlaybackTime = () => {
+        setCurrentPlaybackTime(recordedAudio.currentTime);
+      };
+      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
     }
-  }, [third])
-  
+
+    return () => {
+      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
+    };
+  }, [recordedAudio]);
 
   const handlePlayRecording = () => {
     if (recordedAudio) {
