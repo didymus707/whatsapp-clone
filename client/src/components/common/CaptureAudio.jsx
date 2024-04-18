@@ -101,13 +101,33 @@ function CaptureAudio({ hide }) {
       mediaRecorderRef.current.addEventListenter("stop", () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
         const audioFile = new File([audioBlob], "recording.mp3");
-        setRenderedAudio(audioFile)
+        setRenderedAudio(audioFile);
       });
     }
   };
 
-  const handlePlayRecording = () => {};
-  const handlePauseRecording = () => {};
+  useEffect(() => {
+    first
+  
+    return () => {
+      second
+    }
+  }, [third])
+  
+
+  const handlePlayRecording = () => {
+    if (recordedAudio) {
+      waveform.stop();
+      waveform.play();
+      recordedAudio.play();
+      setIsPlaying(true);
+    }
+  };
+  const handlePauseRecording = () => {
+    waveform.stop();
+    recordedAudio.pause();
+    setIsPlaying(false);
+  };
 
   const sendRecording = async () => {};
 
