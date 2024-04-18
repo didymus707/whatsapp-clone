@@ -87,7 +87,24 @@ function CaptureAudio({ hide }) {
         console.error("Error accessing microphone", error);
       });
   };
-  const handleStopRecording = () => {};
+  const handleStopRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      waveform.stop();
+
+      const audioChunks = [];
+      mediaRecorderRef.current.addEventListenter("dataavailable", (event) =>
+        audioChunks.push(event.data)
+      );
+
+      mediaRecorderRef.current.addEventListenter("stop", () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
+        const audioFile = new File([audioBlob], "recording.mp3");
+        setRenderedAudio(audioFile)
+      });
+    }
+  };
 
   const handlePlayRecording = () => {};
   const handlePauseRecording = () => {};
