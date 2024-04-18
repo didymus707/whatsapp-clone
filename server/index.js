@@ -27,19 +27,19 @@ const io = new Server(server, {
 });
 
 global.onlineUsers = new Map();
-console.log("outside connection", onlineUsers);
+// console.log("outside connection", onlineUsers);
 
 io.on("connection", (socket) => {
   global.chatSocket = socket;
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
-    console.log("inside add-users", onlineUsers);
+    // console.log("inside add-users", onlineUsers);
   });
-  console.log("inside connection", onlineUsers);
+  // console.log("inside connection", onlineUsers);
 
   socket.on("sendMsg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
-    console.log("onlineUsers inside sendMsg event", onlineUsers);
+    // console.log("onlineUsers inside sendMsg event", onlineUsers);
     if (sendUserSocket) {
       socket.to(sendUserSocket).emit("receiveMsg", {
         from: data.from,
