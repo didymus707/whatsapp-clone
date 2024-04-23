@@ -74,12 +74,12 @@ function CaptureAudio({ hide }) {
       .then((stream) => {
         const mediaRecorder = new MediaRecorder(stream);
         mediaRecorderRef.current = mediaRecorder;
-        audioRef.current = stream;
+        audioRef.current.srcObject = stream;
 
         const chunks = [];
         mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
         mediaRecorder.onstop = () => {
-          const blob = new Blob(chunks, { type: "audio/og; codecs=opus" });
+          const blob = new Blob(chunks, { type: "audio/ogg; codecs=opus" });
           const audioURL = URL.createObjectURL(blob);
           const audio = new Audio(audioURL);
           setRecordedAudio(audio);
@@ -90,9 +90,10 @@ function CaptureAudio({ hide }) {
         mediaRecorder.start();
       })
       .catch((error) => {
-        console.error("Error accessing microphone", error);
+        console.error("Error accessing microphone:", error);
       });
   };
+
   const handleStopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
@@ -111,19 +112,6 @@ function CaptureAudio({ hide }) {
       });
     }
   };
-
-  useEffect(() => {
-    if (recordedAudio) {
-      const updatePlaybackTime = () => {
-        setCurrentPlaybackTime(recordedAudio.currentTime);
-      };
-      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
-    }
-
-    return () => {
-      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
-    };
-  }, [recordedAudio]);
 
   const handlePlayRecording = () => {
     if (recordedAudio) {
@@ -150,6 +138,18 @@ function CaptureAudio({ hide }) {
       .toString()
       .padStart(2, "0")}`;
   };
+
+  useEffect(() => {
+    if (recordedAudio) {
+      const updatePlaybackTime = () => {
+        setCurrentPlaybackTime(recordedAudio.currentTime);
+      };
+      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
+      return () => {
+        recordedAudio.removeEventListenter("timeupdate", updatePlaybackTime);
+      };
+    }
+  }, [recordedAudio]);
 
   return (
     <div className="flex text-2xl w-full justify-end items-center">
