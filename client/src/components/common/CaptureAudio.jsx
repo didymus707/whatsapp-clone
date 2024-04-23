@@ -101,11 +101,11 @@ function CaptureAudio({ hide }) {
       waveform.stop();
 
       const audioChunks = [];
-      mediaRecorderRef.current.addEventListenter("dataavailable", (event) =>
+      mediaRecorderRef.current.addEventListener("dataavailable", (event) =>
         audioChunks.push(event.data)
       );
 
-      mediaRecorderRef.current.addEventListenter("stop", () => {
+      mediaRecorderRef.current.addEventListener("stop", () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
         const audioFile = new File([audioBlob], "recording.mp3");
         setRenderedAudio(audioFile);
@@ -144,9 +144,9 @@ function CaptureAudio({ hide }) {
       const updatePlaybackTime = () => {
         setCurrentPlaybackTime(recordedAudio.currentTime);
       };
-      recordedAudio.addEventListenter("timeupdate", updatePlaybackTime);
+      recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
       return () => {
-        recordedAudio.removeEventListenter("timeupdate", updatePlaybackTime);
+        recordedAudio.removeEventListener("timeupdate", updatePlaybackTime);
       };
     }
   }, [recordedAudio]);
@@ -174,34 +174,33 @@ function CaptureAudio({ hide }) {
             )}
           </div>
         )}
-        <div className="w-60" ref={waveformRef} hidden={isRecording}>
-          {recordedAudio && isPlaying && (
-            <span>{formatTime(currentPlaybackTime)}</span>
-          )}
-          {recordedAudio && !isPlaying && (
-            <span>{formatTime(totalDuration)}</span>
-          )}
-          <audio ref={audioRef} hidden />
-          <div className="mr-4">
-            {!isRecording ? (
-              <FaMicrophone
-                className="text-red-500"
-                onClick={handleStartRecording}
-              />
-            ) : (
-              <FaPauseCircle
-                className="text-red-500"
-                onClick={handleStopRecording}
-              />
-            )}
-          </div>
-          <div>
-            <MdSend
-              title="Send"
-              onClick={sendRecording}
-              className="text-panel-header-icon cursor-pointer mr-4"
+        <div className="w-60" ref={waveformRef} hidden={isRecording} />
+        {recordedAudio && isPlaying && (
+          <span>{formatTime(currentPlaybackTime)}</span>
+        )}
+        {recordedAudio && !isPlaying && (
+          <span>{formatTime(totalDuration)}</span>
+        )}
+        <audio ref={audioRef} hidden />
+        <div className="mr-4">
+          {!isRecording ? (
+            <FaMicrophone
+              className="text-red-500"
+              onClick={handleStartRecording}
             />
-          </div>
+          ) : (
+            <FaPauseCircle
+              className="text-red-500 cursor-pointer"
+              onClick={handleStopRecording}
+            />
+          )}
+        </div>
+        <div>
+          <MdSend
+            title="Send"
+            onClick={sendRecording}
+            className="text-panel-header-icon cursor-pointer mr-4"
+          />
         </div>
       </div>
     </div>
