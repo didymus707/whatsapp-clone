@@ -47,7 +47,7 @@ function CaptureAudio({ hide }) {
   useEffect(() => {
     let interval;
     if (isRecording) {
-      interval = setIterval(() => {
+      interval = setInterval(() => {
         setRecordingDuration((prevDuration) => {
           setTotalDuration(prevDuration + 1);
           return prevDuration + 1;
