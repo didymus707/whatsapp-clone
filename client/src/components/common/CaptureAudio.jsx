@@ -9,6 +9,7 @@ import {
   FaPauseCircle,
 } from "react-icons/fa";
 import WaveSurfer from "wavesurfer.js";
+import { ADD_AUDIO_ROUTE } from "@/utils/ApiRoutes";
 
 function CaptureAudio({ hide }) {
   const [waveform, setWaveform] = useState(null);
@@ -121,13 +122,42 @@ function CaptureAudio({ hide }) {
       setIsPlaying(true);
     }
   };
+
   const handlePauseRecording = () => {
     waveform.stop();
     recordedAudio.pause();
     setIsPlaying(false);
   };
 
-  const sendRecording = async () => {};
+  const sendRecording = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("audio", renderedAudio);
+      const response = await axios.post(ADD_AUDIO_ROUTE, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        params: {
+          from: userInfo.id,
+          to: currentChatUser.id,
+        },
+      });
+      if (response.status === 201) {
+        socket.current.emit("sendMsg", {
+          to: currentChatUser?.id,
+          from: userInfo?.id,
+          message: response.data.message,
+        });
+        dispatch({
+          type: reducerCases.ADD_MESSAGE,
+          newMessage: { ...response.data.message },
+          fromSelf: true,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const formatTime = (time) => {
     if (isNaN(time)) return "00:00";
@@ -182,26 +212,26 @@ function CaptureAudio({ hide }) {
           <span>{formatTime(totalDuration)}</span>
         )}
         <audio ref={audioRef} hidden />
-        <div className="mr-4">
-          {!isRecording ? (
-            <FaMicrophone
-              className="text-red-500"
-              onClick={handleStartRecording}
-            />
-          ) : (
-            <FaPauseCircle
-              className="text-red-500 cursor-pointer"
-              onClick={handleStopRecording}
-            />
-          )}
-        </div>
-        <div>
-          <MdSend
-            title="Send"
-            onClick={sendRecording}
-            className="text-panel-header-icon cursor-pointer mr-4"
+      </div>
+      <div className="mr-4">
+        {!isRecording ? (
+          <FaMicrophone
+            className="text-red-500"
+            onClick={handleStartRecording}
           />
-        </div>
+        ) : (
+          <FaPauseCircle
+            className="text-red-500 cursor-pointer"
+            onClick={handleStopRecording}
+          />
+        )}
+      </div>
+      <div>
+        <MdSend
+          title="Send"
+          onClick={sendRecording}
+          className="text-panel-header-icon cursor-pointer mr-4"
+        />
       </div>
     </div>
   );

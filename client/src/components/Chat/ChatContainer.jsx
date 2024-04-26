@@ -3,6 +3,7 @@ import { calculateTime } from "@/utils/CalculateTime";
 import { useStateProvider } from "@/context/StateContext";
 import MessageStatus from "../common/MessageStatus";
 import ImageMessage from "./ImageMessage";
+import CaptureAudio from "../common/CaptureAudio";
 
 function ChatContainer() {
   const [{ messages, currentChatUser, userInfo }] = useStateProvider();
@@ -46,6 +47,7 @@ function ChatContainer() {
                   </div>
                 )}
                 {message.type === "image" && <ImageMessage message={message} />}
+                {message.type === "audio" && <CaptureAudio message={message} />}
               </div>
             ))}
           </div>
