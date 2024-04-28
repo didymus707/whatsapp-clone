@@ -1,3 +1,4 @@
+import axios from "axios";
 import { MdSend } from "react-icons/md";
 import React, { useEffect, useRef, useState } from "react";
 import { useStateProvider } from "@/context/StateContext";
@@ -9,6 +10,7 @@ import {
   FaPauseCircle,
 } from "react-icons/fa";
 import WaveSurfer from "wavesurfer.js";
+import { reducerCases } from "@/context/constants";
 import { ADD_AUDIO_ROUTE } from "@/utils/ApiRoutes";
 
 function CaptureAudio({ hide }) {
@@ -70,6 +72,7 @@ function CaptureAudio({ hide }) {
     setCurrentPlaybackTime(0);
     setTotalDuration(0);
     setIsRecording(true);
+    setRecordedAudio(null);
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
@@ -113,6 +116,18 @@ function CaptureAudio({ hide }) {
       });
     }
   };
+
+  useEffect(() => {
+    if (recordedAudio) {
+      const updatePlaybackTime = () => {
+        setCurrentPlaybackTime(recordedAudio.currentTime);
+      };
+      recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
+      return () => {
+        recordedAudio.removeEventListener("timeupdate", updatePlaybackTime);
+      };
+    }
+  }, [recordedAudio]);
 
   const handlePlayRecording = () => {
     if (recordedAudio) {
@@ -168,18 +183,6 @@ function CaptureAudio({ hide }) {
       .toString()
       .padStart(2, "0")}`;
   };
-
-  useEffect(() => {
-    if (recordedAudio) {
-      const updatePlaybackTime = () => {
-        setCurrentPlaybackTime(recordedAudio.currentTime);
-      };
-      recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
-      return () => {
-        recordedAudio.removeEventListener("timeupdate", updatePlaybackTime);
-      };
-    }
-  }, [recordedAudio]);
 
   return (
     <div className="flex text-2xl w-full justify-end items-center">
