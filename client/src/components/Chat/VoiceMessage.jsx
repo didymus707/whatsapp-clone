@@ -1,3 +1,9 @@
+import Avatar from "../common/Avatar";
+import WaveSurfer from "wavesurfer.js";
+import { HOST } from "@/utils/ApiRoutes";
+import { FaPlay, FaStop } from "react-icons/fa";
+import MessageStatus from "../common/MessageStatus";
+import { calculateTime } from "@/utils/CalculateTime";
 import { useStateProvider } from "@/context/StateContext";
 import React, { useEffect, useRef, useState } from "react";
 
@@ -5,7 +11,6 @@ function VoiceMessage({ message }) {
   const [{ currentChatUser, userInfo }] = useStateProvider();
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioMessage, setAudioMessage] = useState(null);
-  const [recordedAudio, setRecordedAudio] = useState(null);
   const [totalDuration, setTotalDuration] = useState(0);
   const [currentPlaybackTime, setCurrentPlaybackTime] = useState(0);
 
@@ -36,10 +41,10 @@ function VoiceMessage({ message }) {
     const audioURL = `${HOST}/${message.message}`;
     const audio = new Audio(audioURL);
     setAudioMessage(audio);
-    
-    return () => {
-      second;
-    };
+    waveform.current.load(audioURL);
+    waveform.current.on("ready", () => {
+      setTotalDuration(waveform.current.getDuration());
+    });
   }, [message.message]);
 
   const formatTime = (time) => {
@@ -53,33 +58,66 @@ function VoiceMessage({ message }) {
   };
 
   useEffect(() => {
-    if (recordedAudio) {
+    if (audioMessage) {
       const updatePlaybackTime = () => {
-        setCurrentPlaybackTime(recordedAudio.currentTime);
+        setCurrentPlaybackTime(audioMessage.currentTime);
       };
-      recordedAudio.addEventListener("timeupdate", updatePlaybackTime);
+      audioMessage.addEventListener("timeupdate", updatePlaybackTime);
       return () => {
-        recordedAudio.removeEventListener("timeupdate", updatePlaybackTime);
+        audioMessage.removeEventListener("timeupdate", updatePlaybackTime);
       };
     }
-  }, [recordedAudio]);
+  }, [audioMessage]);
 
-  const handlePlayRecording = () => {
-    if (recordedAudio) {
-      waveform.stop();
-      waveform.play();
-      recordedAudio.play();
+  const handlePlayAudio = () => {
+    if (audioMessage) {
+      waveform.current.stop();
+      waveform.current.play();
+      audioMessage.play();
       setIsPlaying(true);
     }
   };
 
-  const handlePauseRecording = () => {
-    waveform.stop();
-    recordedAudio.pause();
+  const handlePauseAudio = () => {
+    waveform.current.stop();
+    audioMessage.pause();
     setIsPlaying(false);
   };
 
-  return <div>VoiceMessage</div>;
+  return (
+    <div
+      className={`flex items-center gap-5 text-white px-4 pr-2 py-4 text-sm rounded-md ${
+        message.senderId === currentChatUser.id
+          ? "bg-incoming-background"
+          : "bg-outgoing-background"
+      }`}
+    >
+      <div>
+        <Avatar type="lg" image={currentChatUser?.profilePicture} />
+      </div>
+      <div className="cursor-pointer text-xl">
+        {!isPlaying ? (
+          <FaPlay onClick={handlePlayAudio} />
+        ) : (
+          <FaStop onClick={handlePauseAudio} />
+        )}
+      </div>
+      <div className="relative">
+        <div className="w-60" ref={waveformRef} />
+        <div className="text-bubble-meta text-[11px] pt-1 flex justify-between absolute bottom-[-22px] w-full">
+          <span>
+            {formatTime(isPlaying ? currentPlaybackTime : totalDuration)}
+          </span>
+          <div className="flex gap-1">
+            <span>{calculateTime(message.createdAt)}</span>
+            {message.senderId === userInfo.id && (
+              <MessageStatus messageStatus={message.messageStatus} />
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default VoiceMessage;
