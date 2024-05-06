@@ -168,7 +168,8 @@ function CaptureAudio({ hide }) {
           newMessage: { ...response.data.message },
           fromSelf: true,
         });
-      }
+      } 
+      setRecordedAudio(null);
     } catch (error) {
       console.log(error);
     }

@@ -78,6 +78,7 @@ function MessageBar() {
         fromSelf: true,
       });
       setMessage("");
+      setShowAudioRecorder(false);
     } catch (error) {
       console.log(error);
     }
