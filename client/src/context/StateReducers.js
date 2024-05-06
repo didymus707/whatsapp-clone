@@ -7,6 +7,7 @@ export const initiaalState = {
   userInfo: undefined,
   contactsPage: false,
   currentChatUser: undefined,
+  messageSearch: false,
 };
 
 const reducer = (state, action) => {
@@ -45,6 +46,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         messages: [...state.messages, action.newMessage],
+      };
+    case reducerCases.SET_MESSAGE_SEARCH:
+      return {
+        ...state,
+        messages: !state.messageSearch,
       };
     default:
       return state;
