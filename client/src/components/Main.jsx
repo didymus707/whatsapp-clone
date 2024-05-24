@@ -10,13 +10,15 @@ import { CHECK_USER_ROUTE, GET_MESSAGES_ROUTE, HOST } from "@/utils/ApiRoutes";
 import { firebaseAuth } from "@/utils/FirebaseConfig";
 import { useStateProvider } from "@/context/StateContext";
 import Chat from "./Chat/Chat";
+import SearchMessages from "./Chat/SearchMessages";
 
 function Main() {
   const socket = useRef();
   const router = useRouter();
   const [socketEvent, setSocketEvent] = useState(false);
   const [redirectLogin, setRedirectLogin] = useState(false);
-  const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+  const [{ userInfo, currentChatUser, messageSearch }, dispatch] =
+    useStateProvider();
 
   useEffect(() => {
     if (redirectLogin) router.push("/login");
@@ -86,7 +88,14 @@ function Main() {
     <>
       <div className="grid grid-cols-main h-screen w-screen max-h-screen max-w-full overflow-hidden">
         <ChatList />
-        {currentChatUser ? <Chat /> : <Empty />}
+        {currentChatUser ? (
+          <div className={messageSearch ? "grid grid-cols-2" : "grid-cols-2"}>
+            <Chat />
+            {messageSearch && <SearchMessages />}
+          </div>
+        ) : (
+          <Empty />
+        )}
       </div>
     </>
   );

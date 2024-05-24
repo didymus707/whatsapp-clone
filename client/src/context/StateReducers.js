@@ -50,7 +50,7 @@ const reducer = (state, action) => {
     case reducerCases.SET_MESSAGE_SEARCH:
       return {
         ...state,
-        messages: !state.messageSearch,
+        messageSearch: !state.messageSearch,
       };
     default:
       return state;
