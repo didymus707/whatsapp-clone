@@ -3,15 +3,29 @@ import Avatar from "../common/Avatar";
 import { useStateProvider } from "@/context/StateContext";
 import { reducerCases } from "@/context/constants";
 
-function ChatLIstItem({ data, isContactPage = false }) {
+function ChatLIstItem({ data, isContactsPage = false }) {
   const [{ userInfo, currentChatUser }, dispatch] = useStateProvider();
+
   const handleContactClick = () => {
-    dispatch({
-      type: reducerCases.CHANGE_CURRENT_CHAT_USER,
-      user: { ...data },
-    });
-    dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
-  };   
+    if (!isContactsPage) {
+      dispatch({
+        type: reducerCases.CHANGE_CURRENT_CHAT_USER,
+        user: {
+          name: data.name,
+          about: data.about,
+          profilePicture: data.profilePicture,
+          email: data.email,
+          id: userInfo.id === data.senderId ? data.receiverId : data.senderId,
+        },
+      });
+    } else {
+      dispatch({
+        type: reducerCases.CHANGE_CURRENT_CHAT_USER,
+        user: { ...data },
+      });
+      dispatch({ type: reducerCases.SET_ALL_CONTACTS_PAGE });
+    }
+  };
 
   return (
     <div

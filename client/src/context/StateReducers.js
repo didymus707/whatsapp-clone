@@ -3,11 +3,13 @@ import { reducerCases } from "./constants";
 export const initiaalState = {
   messages: [],
   newUSer: false,
+  onlineUsers: [],
+  userContacts: [],
   socket: undefined,
   userInfo: undefined,
   contactsPage: false,
-  currentChatUser: undefined,
   messageSearch: false,
+  currentChatUser: undefined,
 };
 
 const reducer = (state, action) => {
@@ -51,6 +53,16 @@ const reducer = (state, action) => {
       return {
         ...state,
         messageSearch: !state.messageSearch,
+      };
+    case reducerCases.SET_USER_CONTACTS:
+      return {
+        ...state,
+        userContacts: action.userContacts,
+      };
+    case reducerCases.SET_ONLINE_USERS:
+      return {
+        ...state,
+        onlineUsers: action.onlineUsers,
       };
     default:
       return state;

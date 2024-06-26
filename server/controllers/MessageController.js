@@ -161,16 +161,16 @@ export const getInititalContactsWithMessages = async (req, res, next) => {
         messageStatusChange.push(msg.id);
       }
 
+      const {
+        id,
+        type,
+        message,
+        messageStatus,
+        createdAt,
+        senderId,
+        receiverId,
+      } = msg;
       if (!users.get(calculatedId)) {
-        const {
-          id,
-          type,
-          message,
-          messageStatus,
-          createdAt,
-          senderId,
-          receiverId,
-        } = msg;
         let user = {
           messageId: id,
           type,
@@ -202,7 +202,23 @@ export const getInititalContactsWithMessages = async (req, res, next) => {
         });
       }
     });
+
+    if (messageStatusChange.length) {
+      await prisma.messages.updateMany({
+        where: {
+          id: { in: messageStatusChange },
+        },
+        data: {
+          messageStatus: "delivered",
+        },
+      });
+    }
+
+    return res.status(200).json({
+      users: Array.from(users.values()),
+      onlineUsers: Array.from(onlineUsers.keys()),
+    });
   } catch (error) {
-    next(err);
+    next(error);
   }
 };
