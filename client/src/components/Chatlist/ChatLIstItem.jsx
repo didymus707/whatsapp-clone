@@ -40,6 +40,17 @@ function ChatLIstItem({ data, isContactsPage = false }) {
           <div>
             <span className="text-white">{data?.name}</span>
           </div>
+          {!isContactsPage && (
+            <div>
+              <span
+                className={`${
+                  !data.totalUnreadMessages > 0
+                    ? "text-secondary"
+                    : "text-icon-green"
+                }`}
+              ></span>
+            </div>
+          )}
         </div>
         <div className="flex border-b border-conversation-border pb-2 pt-1 pr-2">
           <div className="flex justify-between w-full">
