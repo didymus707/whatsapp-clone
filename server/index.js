@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import AuthRoutes from "./routes/AuthRoutes.js";
 import MessageRoutes from "./routes/MessageRoutes.js";
-import { Server } from "socket.io";
+import { Server as SocketIOServer } from "socket.io";
 
 dotenv.config();
 const app = express();
@@ -21,9 +21,11 @@ const server = app.listen(process.env.PORT, () => {
   console.log(`Server started on PORT ${process.env.PORT}`);
 });
 
-const io = new Server(server, {
+const io = new SocketIOServer(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin:
+      "https://whatsapp-clone-eight-lovat.vercel.app/" ||
+      "http://localhost:3000",
   },
 });
 
@@ -35,7 +37,6 @@ io.on("connection", (socket) => {
   socket.on("add-user", (userId) => {
     onlineUsers.set(userId, socket.id);
   });
-  
 
   socket.on("sendMsg", (data) => {
     const sendUserSocket = onlineUsers.get(data.to);
@@ -48,3 +49,5 @@ io.on("connection", (socket) => {
     }
   });
 });
+
+export default app;
